@@ -36,7 +36,7 @@ It's better to install 3 Ubuntu20-04 nodes.
 192.168.100.203  ceph3
 
 
-Also 3 raw disk on each node should be available.
+Also 1 raw disk on each node should be available.
 
 
 2) add these 3 nodes to each /etc/hosts file:
