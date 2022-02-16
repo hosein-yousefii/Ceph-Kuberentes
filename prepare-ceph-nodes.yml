@@ -1,0 +1,36 @@
+---
+- name: Prepare ceph nodes
+  hosts: ceph_nodes
+  become: yes
+  become_method: sudo
+  vars:
+    ceph_admin_user: cephadmin
+  tasks:
+    - name: Set timezone
+      timezone:
+        name: Asia/Tehran
+		
+    - name: Update system
+      apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+
+    - name: Install common packages
+      apt:
+        name: [vim,git,bash-completion,wget,curl,chrony]
+        state: present
+        update_cache: yes
+
+    - name: Set authorized key taken from file to root user
+      authorized_key:
+        user: root
+        state: present
+        key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+   
+    - name: Install Docker
+      shell: |
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        echo "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable" > /etc/apt/sources.list.d/docker-ce.list
+        apt update
+        apt install -qq -y docker-ce docker-ce-cli containerd.io
